@@ -1,0 +1,47 @@
+<launch>
+
+    <arg name="project" default="lio_sam"/>
+    
+    <!-- Parameters -->
+    <rosparam file="$(find lio_sam)/config/params.yaml" command="load" />
+
+    <!--- LOAM -->
+    <include file="$(find lio_sam)/launch/include/module_loam.launch" />
+
+    <!--- Robot State TF -->
+    <include file="$(find lio_sam)/launch/include/module_robot_state_publisher.launch" />
+
+    <!--- Run Navsat -->
+    <include file="$(find lio_sam)/launch/include/module_navsat.launch" />
+
+    <!--- Run Rviz-->
+    <include file="$(find lio_sam)/launch/include/module_rviz.launch" />
+
+	<node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+		<param name="resolution" value="0.50" />
+		
+		<!-- fixed map frame (set to 'map' if SLAM or localization running!) -->
+		<param name="frame_id" type="string" value="map" />
+		
+		<!-- maximum range to integrate (speedup!) -->
+		<param name="sensor_model/max_range" value="100.0" />
+
+		<param name="sensor_model/hit" value="0.8"/>
+
+		<param name="base_frame_id" value="base_link" />
+
+		<param name="pointcloud_min_z" value="0.3" />
+		<param name="pointcloud_max_z" value="4" />
+		
+
+		<!-- data source to integrate (PointCloud2) -->
+		<remap from="cloud_in" to="lio_sam/mapping/map_global" />
+		<!-- <remap from="cloud_in" to="voxel_grid/output" /> -->
+	
+	</node>
+
+	<node pkg="pcd_diff" type="pcd_diff_node" name="pcd_diff">
+
+	</node>
+
+</launch>
