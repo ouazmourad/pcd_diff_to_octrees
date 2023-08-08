@@ -1,7 +1,0 @@
-</launch>
-    <node 
-    
-        name="octomap_saver" pkg="octomap_server" type="octomap_saver" args="-f my_octomap.bt" output="screen"> 
-    
-    </node>
-</launch>
